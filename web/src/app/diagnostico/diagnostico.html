@@ -1,0 +1,75 @@
+<section class="aviso">
+  <h2>Demonstração dos requisitos opcionais</h2>
+  <p>
+    Esta tela existe para a avaliação do desafio: ela executa os cenários de idempotência e
+    concorrência e mostra o resultado com os números reais. Não faz parte do fluxo de uso do
+    sistema.
+  </p>
+  <p>
+    O cenário de falha de um microsserviço não está aqui porque não dá para demonstrá-lo por um
+    botão: é preciso derrubar o serviço de fora. O procedimento está no README, na seção
+    <strong>Testando o cenário de falha</strong>.
+  </p>
+  <p class="miudo">
+    Cada teste cria o próprio produto e o apaga no fim, para não interferir no cadastro que já
+    existe nem deixar sobra no catálogo.
+  </p>
+</section>
+
+<section class="cartao">
+  <div class="cabecalho">
+    <div>
+      <h3>Idempotência</h3>
+      <p>A mesma baixa chamada duas vezes não pode descontar o saldo duas vezes.</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="testarIdempotencia()" [disabled]="rodando">
+      @if (rodando === 'idempotencia') {
+        <mat-spinner diameter="18"></mat-spinner>
+      } @else {
+        Executar
+      }
+    </button>
+  </div>
+
+  @if (passos['idempotencia']?.length) {
+    <ol class="passos">
+      @for (passo of passos['idempotencia']; track $index) {
+        <li [class.falhou]="!passo.ok">
+          <mat-icon>{{ passo.ok ? 'check_circle' : 'cancel' }}</mat-icon>
+          <span
+            ><strong>{{ passo.descricao }}</strong> — {{ passo.resultado }}</span
+          >
+        </li>
+      }
+    </ol>
+  }
+</section>
+
+<section class="cartao">
+  <div class="cabecalho">
+    <div>
+      <h3>Concorrência</h3>
+      <p>Produto com saldo 1 disputado por duas baixas ao mesmo tempo.</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="testarConcorrencia()" [disabled]="rodando">
+      @if (rodando === 'concorrencia') {
+        <mat-spinner diameter="18"></mat-spinner>
+      } @else {
+        Executar
+      }
+    </button>
+  </div>
+
+  @if (passos['concorrencia']?.length) {
+    <ol class="passos">
+      @for (passo of passos['concorrencia']; track $index) {
+        <li [class.falhou]="!passo.ok">
+          <mat-icon>{{ passo.ok ? 'check_circle' : 'cancel' }}</mat-icon>
+          <span
+            ><strong>{{ passo.descricao }}</strong> — {{ passo.resultado }}</span
+          >
+        </li>
+      }
+    </ol>
+  }
+</section>

@@ -1,0 +1,114 @@
+<section class="cartao">
+  <h2>Nova nota fiscal</h2>
+
+  <div class="montagem">
+    <mat-form-field appearance="outline" class="cresce">
+      <mat-label>Produto</mat-label>
+      <mat-select [(ngModel)]="produtoSelecionado">
+        @for (produto of produtos; track produto.id) {
+          <mat-option [value]="produto.id">
+            {{ produto.codigo }} — {{ produto.descricao }} (saldo {{ produto.saldo }})
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="estreito">
+      <mat-label>Quantidade</mat-label>
+      <input matInput type="number" min="1" aria-label="Quantidade" [(ngModel)]="quantidade" />
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="adicionarItem()"
+      [disabled]="!produtoSelecionado"
+    >
+      Adicionar
+    </button>
+  </div>
+
+  @if (rascunho.length > 0) {
+    <mat-chip-set class="itens">
+      @for (item of rascunho; track item.produtoId) {
+        <mat-chip (removed)="removerItem(item)">
+          {{ item.codigo }} × {{ item.quantidade }}
+          <button matChipRemove type="button" aria-label="Remover item">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+      }
+    </mat-chip-set>
+
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="criarNota()"
+      [disabled]="salvando"
+    >
+      Criar nota
+    </button>
+  } @else {
+    <p class="vazio">Adicione produtos para montar a nota.</p>
+  }
+</section>
+
+<section class="cartao">
+  <h2>Notas emitidas</h2>
+
+  @if (carregando) {
+    <div class="centralizado"><mat-spinner diameter="36"></mat-spinner></div>
+  } @else if (notas.length === 0) {
+    <p class="vazio">Nenhuma nota emitida ainda.</p>
+  } @else {
+    <div class="tabela-rolante">
+      <table mat-table [dataSource]="notas">
+        <ng-container matColumnDef="numero">
+          <th mat-header-cell *matHeaderCellDef>Número</th>
+          <td mat-cell *matCellDef="let nota">{{ nota.numero }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="itens">
+          <th mat-header-cell *matHeaderCellDef>Itens</th>
+          <td mat-cell *matCellDef="let nota">
+            {{ nota.itens.length }} produto(s), {{ totalItens(nota) }} unidade(s)
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let nota">
+            <span class="marca" [class.fechada]="nota.status === StatusNota.Fechada">
+              {{ nota.status === StatusNota.Fechada ? 'Fechada' : 'Aberta' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef>Ação</th>
+          <td mat-cell *matCellDef="let nota">
+            @if (nota.status === StatusNota.Aberta) {
+              @if (imprimindo === nota.id) {
+                <span class="processando">
+                  <mat-spinner diameter="20"></mat-spinner>
+                  Processando…
+                </span>
+              } @else {
+                <button mat-flat-button color="primary" type="button" (click)="imprimir(nota)">
+                  <mat-icon>print</mat-icon>
+                  Imprimir
+                </button>
+              }
+            } @else {
+              <span class="ja-impressa">Impressa</span>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+        <tr mat-row *matRowDef="let linha; columns: colunas"></tr>
+      </table>
+    </div>
+  }
+</section>

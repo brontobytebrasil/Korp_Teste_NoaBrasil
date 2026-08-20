@@ -1,0 +1,63 @@
+services:
+  banco:
+    image: postgres:16-alpine
+    container_name: korp-banco
+    environment:
+      POSTGRES_USER: korp
+      POSTGRES_PASSWORD: korp
+      POSTGRES_DB: postgres
+    ports:
+      # 5432 já é usada pelo PostgreSQL instalado no Windows; o container
+      # publica em 5433 para não disputar a porta. Preso ao 127.0.0.1: essa
+      # porta serve para inspecionar o banco na própria máquina, e os
+      # serviços falam com ele pela rede interna do compose.
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - ./infra/init-bancos.sql:/docker-entrypoint-initdb.d/init-bancos.sql:ro
+      - dados-banco:/var/lib/postgresql/data
+    healthcheck:
+      # sem o -d, o pg_isready procura um banco com o nome do usuario e
+      # registra FATAL no log a cada verificacao
+      test: ["CMD-SHELL", "pg_isready -U korp -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  estoque:
+    build:
+      context: ./servicos/Estoque
+    container_name: korp-estoque
+    environment:
+      ConnectionStrings__Padrao: Host=banco;Database=estoque;Username=korp;Password=korp
+    ports:
+      - "5001:8080"
+    depends_on:
+      banco:
+        condition: service_healthy
+
+  faturamento:
+    build:
+      context: ./servicos/Faturamento
+    container_name: korp-faturamento
+    environment:
+      ConnectionStrings__Padrao: Host=banco;Database=faturamento;Username=korp;Password=korp
+      Estoque__Url: http://estoque:8080
+    ports:
+      - "5002:8080"
+    depends_on:
+      banco:
+        condition: service_healthy
+      estoque:
+        condition: service_started
+
+  web:
+    build:
+      context: ./web
+    container_name: korp-web
+    ports:
+      - "4200:80"
+    depends_on:
+      - faturamento
+
+volumes:
+  dados-banco:

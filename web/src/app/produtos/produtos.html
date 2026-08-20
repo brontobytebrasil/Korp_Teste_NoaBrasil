@@ -1,0 +1,104 @@
+<section class="cartao">
+  <h2>{{ emEdicao ? 'Editar produto' : 'Novo produto' }}</h2>
+
+  <form [formGroup]="formulario" (ngSubmit)="salvar()" class="formulario">
+    <mat-form-field appearance="outline">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="codigo" placeholder="FO-001" />
+      @if (formulario.controls.codigo.hasError('required') && formulario.controls.codigo.touched) {
+        <mat-error>Informe o código.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="cresce">
+      <mat-label>Descrição</mat-label>
+      <input matInput formControlName="descricao" placeholder="Filtro de óleo" />
+      @if (
+        formulario.controls.descricao.hasError('required') && formulario.controls.descricao.touched
+      ) {
+        <mat-error>Informe a descrição.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="estreito">
+      <mat-label>Saldo</mat-label>
+      <input matInput type="number" formControlName="saldo" min="0" />
+      @if (formulario.controls.saldo.hasError('min')) {
+        <mat-error>O saldo não pode ser negativo.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="acoes-formulario">
+      <button mat-flat-button color="primary" type="submit" [disabled]="salvando">
+        {{ emEdicao ? 'Salvar' : 'Cadastrar' }}
+      </button>
+      @if (emEdicao) {
+        <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+      }
+    </div>
+  </form>
+</section>
+
+<section class="cartao">
+  <h2>Produtos</h2>
+
+  @if (carregando) {
+    <div class="centralizado">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else if (produtos.length === 0) {
+    <p class="vazio">Nenhum produto cadastrado ainda.</p>
+  } @else {
+    <div class="tabela-rolante">
+      <table mat-table [dataSource]="produtos">
+        <ng-container matColumnDef="codigo">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let produto">{{ produto.codigo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="descricao">
+          <th mat-header-cell *matHeaderCellDef>Descrição</th>
+          <td mat-cell *matCellDef="let produto">{{ produto.descricao }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="saldo">
+          <th mat-header-cell *matHeaderCellDef>Saldo</th>
+          <td mat-cell *matCellDef="let produto">{{ produto.saldo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let produto" class="acoes">
+            @if (confirmandoRemocao === produto.id) {
+              <span class="confirmacao">Excluir {{ produto.codigo }}?</span>
+              <button mat-flat-button color="warn" type="button" (click)="remover(produto)">
+                Excluir
+              </button>
+              <button mat-button type="button" (click)="desistirDaRemocao()">Cancelar</button>
+            } @else {
+              <button
+                mat-icon-button
+                type="button"
+                (click)="editar(produto)"
+                aria-label="Editar produto"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                (click)="pedirConfirmacao(produto)"
+                aria-label="Remover produto"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+        <tr mat-row *matRowDef="let linha; columns: colunas"></tr>
+      </table>
+    </div>
+  }
+</section>

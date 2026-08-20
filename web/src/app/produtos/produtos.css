@@ -1,0 +1,40 @@
+.formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.formulario mat-form-field {
+  width: 160px;
+}
+
+.formulario .cresce {
+  flex: 1;
+  min-width: 220px;
+}
+
+.formulario .estreito {
+  width: 110px;
+}
+
+.acoes-formulario {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.6rem;
+}
+
+table {
+  width: 100%;
+}
+
+.acoes {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.confirmacao {
+  font-size: 0.85rem;
+  color: #b71c1c;
+  margin-right: 0.5rem;
+}

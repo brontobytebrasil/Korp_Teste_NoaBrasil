@@ -1,0 +1,74 @@
+.aviso {
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.aviso h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  color: #1e1b4b;
+}
+
+.aviso p {
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  color: #312e81;
+}
+
+.aviso .miudo {
+  font-size: 0.78rem;
+  color: #4338ca;
+  margin: 0;
+}
+
+.cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cabecalho h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.cabecalho p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #616161;
+  max-width: 60ch;
+}
+
+.passos {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.passos li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #1b5e20;
+}
+
+.passos li.falhou {
+  color: #b71c1c;
+}
+
+.passos mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}

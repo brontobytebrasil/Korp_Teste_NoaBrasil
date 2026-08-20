@@ -1,0 +1,47 @@
+/* Estilos globais. O específico de cada tela fica no componente. */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.cartao {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cartao h2 {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.centralizado {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.vazio {
+  color: #757575;
+  margin: 0.5rem 0 0;
+}
+
+/* Tabela larga rola dentro do próprio cartão. Sem isto, no celular ela
+   empurra a largura da página inteira e vaza para fora da borda. */
+.tabela-rolante {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabela-rolante table {
+  min-width: 460px;
+}

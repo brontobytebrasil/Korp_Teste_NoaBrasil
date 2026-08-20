@@ -1,0 +1,25 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+appsettings.Development.json
+
+# Angular / Node
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+
+# Ambiente
+.env
+.env.local
+
+# Editores
+.vs/
+.vscode/
+.idea/
+
+# Sistema
+Thumbs.db
+.DS_Store
